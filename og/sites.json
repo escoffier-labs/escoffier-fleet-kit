@@ -1,0 +1,582 @@
+{
+  "brigade-site": {
+    "kicker": "BRIGADE · OPERATOR LAYER",
+    "h1": "Your agents run loops.",
+    "h2": "Brigade keeps the receipts.",
+    "sub": "The local operator layer for eighteen agent harnesses.",
+    "foot": [
+      {
+        "b": "18",
+        "t": "HARNESSES"
+      },
+      {
+        "b": "0",
+        "t": "DAEMONS"
+      },
+      {
+        "t": "100% LOCAL"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "·· BRIGADE RECEIPT ··",
+      "rows": [
+        {
+          "k": "RUN",
+          "v": "#2026-06-12"
+        },
+        {
+          "k": "HARNESS",
+          "v": "claude-code"
+        },
+        {
+          "k": "plan reviewed",
+          "v": "ok",
+          "ok": true
+        },
+        {
+          "k": "tests green",
+          "v": "ok",
+          "ok": true
+        },
+        {
+          "k": "handoff",
+          "v": "1 queued"
+        }
+      ],
+      "foot": "NOTHING LEFT THE MACHINE"
+    }
+  },
+  "agentpantry-site": {
+    "kicker": "AGENT PANTRY · GARDE-MANGER",
+    "h1": "Authenticated sessions",
+    "h2": "for agent machines.",
+    "sub": "Mirror the browser auth and secrets you choose to the machine your agent runs on, sealed end to end.",
+    "foot": [
+      {
+        "t": "AES-256-GCM"
+      },
+      {
+        "b": "0",
+        "t": "DAEMONS"
+      },
+      {
+        "t": "ALLOWLIST ONLY"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "·· PANTRY STATUS ··",
+      "rows": [
+        {
+          "k": "ROLE",
+          "v": "sink"
+        },
+        {
+          "k": "KEY",
+          "v": "ok",
+          "ok": true
+        },
+        {
+          "k": "github.com",
+          "v": "synced 2m",
+          "ok": true
+        },
+        {
+          "k": "workday.com",
+          "v": "synced 2m",
+          "ok": true
+        }
+      ],
+      "foot": "REPLAY COUNTER STRICT"
+    }
+  },
+  "content-guard-site": {
+    "kicker": "CONTENT GUARD · LE PASSE",
+    "h1": "Nothing leaves",
+    "h2": "the kitchen unchecked.",
+    "sub": "Policy-driven content scanning and publish gates. Hostnames, private IPs, and keys caught at the boundary.",
+    "foot": [
+      {
+        "b": "3",
+        "t": "POLICIES"
+      },
+      {
+        "b": "0",
+        "t": "DAEMONS"
+      },
+      {
+        "t": "100% LOCAL"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "·· THE PASS ··",
+      "rows": [
+        {
+          "k": "policy",
+          "v": "public-repo"
+        },
+        {
+          "k": "hostnames",
+          "v": "clear",
+          "ok": true
+        },
+        {
+          "k": "private IPs",
+          "v": "clear",
+          "ok": true
+        },
+        {
+          "k": "key patterns",
+          "v": "clear",
+          "ok": true
+        }
+      ],
+      "stamp": "checked",
+      "stampTone": "green"
+    }
+  },
+  "stationtrail-site": {
+    "kicker": "STATIONTRAIL · CHEF DE PARTIE",
+    "h1": "Every station",
+    "h2": "keeps its log.",
+    "sub": "Export local agent-session history from every harness to portable JSONL. Local only, no network calls.",
+    "foot": [
+      {
+        "b": "0",
+        "t": "NETWORK CALLS"
+      },
+      {
+        "t": "PORTABLE JSONL"
+      },
+      {
+        "t": "LOCAL ONLY"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "station log",
+      "hand": true,
+      "rows": [
+        {
+          "k": "09:14 claude-code",
+          "v": "47 turns"
+        },
+        {
+          "k": "11:02 codex",
+          "v": "12 turns"
+        },
+        {
+          "k": "14:30 openclaw",
+          "v": "3 receipts"
+        }
+      ],
+      "foot": "ONE LINE PER SESSION"
+    }
+  },
+  "sourceharvest-site": {
+    "kicker": "SOURCEHARVEST · LE MARCHE",
+    "h1": "What comes in",
+    "h2": "from beyond the kitchen.",
+    "sub": "Export notes, chat archives, issues, and git history into one portable adapter format.",
+    "foot": [
+      {
+        "t": "miseledger.adapter.v1"
+      },
+      {
+        "b": "0",
+        "t": "DAEMONS"
+      },
+      {
+        "t": "LOCAL ONLY"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "·· MARKET CRATES ··",
+      "rows": [
+        {
+          "k": "notes",
+          "v": "crated",
+          "ok": true
+        },
+        {
+          "k": "chat archives",
+          "v": "crated",
+          "ok": true
+        },
+        {
+          "k": "issues",
+          "v": "crated",
+          "ok": true
+        },
+        {
+          "k": "git history",
+          "v": "crated",
+          "ok": true
+        }
+      ],
+      "foot": "ONE CRATE FORMAT"
+    }
+  },
+  "miseledger-site": {
+    "kicker": "MISELEDGER · LE GRAND LIVRE",
+    "h1": "The bound ledger",
+    "h2": "for agent work.",
+    "sub": "A local-first evidence graph over agent history. SQLite full-text search, Markdown export, evidence bundles.",
+    "foot": [
+      {
+        "t": "SQLITE FTS"
+      },
+      {
+        "b": "0",
+        "t": "DAEMONS"
+      },
+      {
+        "t": "LOCAL FIRST"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "evidence",
+      "hand": true,
+      "rows": [
+        {
+          "k": "06-10 session",
+          "v": "e-0142"
+        },
+        {
+          "k": "06-11 import",
+          "v": "e-0143"
+        },
+        {
+          "k": "06-12 bundle",
+          "v": "e-0144"
+        }
+      ],
+      "foot": "EVERY ROW RECALLS ITS SOURCE"
+    }
+  },
+  "memory-doctor-site": {
+    "kicker": "MEMORY DOCTOR · TOURNANT",
+    "h1": "The daily line check",
+    "h2": "for agent memory.",
+    "sub": "Maintenance CLI for the Claude Code and OpenClaw memory system. Four verbs: status, lint, ingest, compact.",
+    "foot": [
+      {
+        "b": "4",
+        "t": "VERBS"
+      },
+      {
+        "b": "0",
+        "t": "DAEMONS"
+      },
+      {
+        "t": "100% LOCAL"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "line check · memory",
+      "hand": true,
+      "rows": [
+        {
+          "k": "[x] status",
+          "v": "11.2/12KB"
+        },
+        {
+          "k": "[x] lint",
+          "v": "2 stale"
+        },
+        {
+          "k": "[x] ingest",
+          "v": "3 filed"
+        },
+        {
+          "k": "[ ] compact",
+          "v": "sunday"
+        }
+      ],
+      "stamp": "checked",
+      "stampTone": "green"
+    }
+  },
+  "bootstrap-doctor-site": {
+    "kicker": "BOOTSTRAP DOCTOR · COMMIS",
+    "h1": "Keep the mise",
+    "h2": "en place tight.",
+    "sub": "Audit oversize OpenClaw bootstrap files and trim them into reference cards with heuristics plus judgment.",
+    "foot": [
+      {
+        "t": "12KB BUDGET"
+      },
+      {
+        "b": "0",
+        "t": "DAEMONS"
+      },
+      {
+        "t": "100% LOCAL"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "·· TRIMMING BOARD ··",
+      "rows": [
+        {
+          "k": "MEMORY.md",
+          "v": "41KB"
+        },
+        {
+          "k": "exec timeouts",
+          "v": "to cards"
+        },
+        {
+          "k": "backup schedule",
+          "v": "to cards"
+        },
+        {
+          "k": "budget",
+          "v": "12KB",
+          "ok": true
+        }
+      ],
+      "stamp": "trimmed",
+      "stampTone": "green"
+    }
+  },
+  "agent-notify-site": {
+    "kicker": "AGENT NOTIFY · ABOYEUR",
+    "h1": "Calls the orders",
+    "h2": "to your channels.",
+    "sub": "Privacy-first push notifications from coding agents to Discord, Telegram, and Signal. Zero telemetry.",
+    "foot": [
+      {
+        "b": "3",
+        "t": "CHANNELS"
+      },
+      {
+        "b": "0",
+        "t": "TELEMETRY"
+      },
+      {
+        "t": "SINGLE BINARY"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "·· ON THE SPIKE ··",
+      "rows": [
+        {
+          "k": "build green",
+          "v": "discord",
+          "ok": true
+        },
+        {
+          "k": "tests failed",
+          "v": "telegram"
+        },
+        {
+          "k": "release tagged",
+          "v": "signal",
+          "ok": true
+        }
+      ],
+      "foot": "CALLED ONCE, YOUR CHANNEL"
+    }
+  },
+  "cloche-site": {
+    "kicker": "CLOCHE · CHEF DE RANG",
+    "h1": "Lift the dome,",
+    "h2": "the shot is plated.",
+    "sub": "Agent-neutral desktop capture for people and agents. Polished shots, stable JSON, optional MCP server.",
+    "foot": [
+      {
+        "t": "JSON ON STDOUT"
+      },
+      {
+        "t": "MCP OPTIONAL"
+      },
+      {
+        "t": "100% LOCAL"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "·· PLATED ··",
+      "rows": [
+        {
+          "k": "captured",
+          "v": "2026-06-12"
+        },
+        {
+          "k": "size",
+          "v": "1440x900"
+        },
+        {
+          "k": "file",
+          "v": "shot.png",
+          "ok": true
+        },
+        {
+          "k": "metadata",
+          "v": "attached",
+          "ok": true
+        }
+      ],
+      "foot": "READY TO SHARE"
+    }
+  },
+  "mise-en-scene-site": {
+    "kicker": "MISE EN SCENE · L'ARDOISE",
+    "h1": "Your system,",
+    "h2": "explained on the board.",
+    "sub": "Turn repos, specs, and incident reports into interactive HTML/SVG explainers with audience modes.",
+    "foot": [
+      {
+        "t": "HTML/SVG EXPORT"
+      },
+      {
+        "t": "AUDIENCE MODES"
+      },
+      {
+        "t": "SOURCE-GROUNDED"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "today's scene",
+      "hand": true,
+      "rows": [
+        {
+          "k": "gateway",
+          "v": "node"
+        },
+        {
+          "k": "ingest queue",
+          "v": "node"
+        },
+        {
+          "k": "evidence db",
+          "v": "node"
+        }
+      ],
+      "foot": "CLICK ANY NODE FOR FACTS"
+    }
+  },
+  "skillet-site": {
+    "kicker": "SKILLET · LA TECHNIQUE",
+    "h1": "A skillet full",
+    "h2": "of agent skills.",
+    "sub": "Production-tested workflows for auditing, improving, and shipping repos with AI coding agents.",
+    "foot": [
+      {
+        "b": "19",
+        "t": "SKILLS"
+      },
+      {
+        "t": "SKILL.md"
+      },
+      {
+        "t": "CLAUDE CODE +"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "·· THE PASS ··",
+      "rows": [
+        {
+          "k": "/line-check",
+          "v": "audit"
+        },
+        {
+          "k": "/bug-hunt",
+          "v": "verify"
+        },
+        {
+          "k": "/security-sweep",
+          "v": "harden"
+        },
+        {
+          "k": "/pass",
+          "v": "ship",
+          "ok": true
+        }
+      ],
+      "foot": "NOTHING LEAVES UNTASTED"
+    }
+  },
+  "escoffier-site": {
+    "kicker": "ESCOFFIER LABS · AGENT OPS",
+    "h1": "Mise en place",
+    "h2": "for your agents.",
+    "sub": "Small, composable agent-ops tools that run like a kitchen. Local by default, receipts for everything.",
+    "foot": [
+      {
+        "b": "12",
+        "t": "TOOLS"
+      },
+      {
+        "b": "0",
+        "t": "DAEMONS"
+      },
+      {
+        "t": "100% LOCAL"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "~ LA CARTE ~",
+      "hand": true,
+      "rows": [
+        {
+          "k": "01 Brigade",
+          "v": "chef"
+        },
+        {
+          "k": "02 Agent Pantry",
+          "v": "pantry"
+        },
+        {
+          "k": "03 Content Guard",
+          "v": "passe"
+        },
+        {
+          "k": "11 Mise en Scene",
+          "v": "ardoise"
+        },
+        {
+          "k": "12 Skillet",
+          "v": "technique"
+        }
+      ],
+      "foot": "TWELVE COURSES, ONE KITCHEN"
+    }
+  }
+}

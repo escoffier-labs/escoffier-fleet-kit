@@ -1,0 +1,16 @@
+{
+  "name": "escoffier-fleet-kit",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Shared theme, OG preview generator, and routine version sync for the Escoffier Labs site fleet.",
+  "scripts": {
+    "og": "node og/render.mjs",
+    "sync": "node bin/sync-versions.mjs",
+    "sync:dry": "node bin/sync-versions.mjs --dry",
+    "fleet": "bin/fleet-sync.sh"
+  },
+  "dependencies": {
+    "playwright-core": "^1.49.0"
+  }
+}

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@600&display=swap");
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; }
+  body {
+    background:
+      radial-gradient(ellipse 60% 55% at 18% 12%, color-mix(in srgb, #e0a45c 9%, transparent), transparent 60%),
+      #0d1014;
+    color: #dde3ea;
+    font-family: "Inter", system-ui, sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+  .pad { padding: 62px 70px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+  .kicker {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 18px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #e0a45c;
+  }
+  h1 { font-size: 70px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.0; margin-top: 24px; max-width: 700px; }
+  h1 .amber { color: #e0a45c; }
+  .sub { margin-top: 22px; font-size: 22px; line-height: 1.45; color: #9aa4b2; max-width: 580px; }
+  .foot { font-family: "IBM Plex Mono", monospace; font-size: 16px; letter-spacing: 0.04em; color: #7d8590; display: flex; gap: 38px; }
+  .foot b { color: #dde3ea; font-weight: 600; }
+  /* The cream artifact card on the right, echoing the receipt across the fleet. */
+  .card {
+    position: absolute; top: 92px; right: -24px; width: 318px;
+    background: #f5f2ea; color: #1d1a14; font-family: "IBM Plex Mono", monospace;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.55); transform: rotate(2.3deg); padding: 24px 26px; border-radius: 2px;
+  }
+  .card-title { text-align: center; font-weight: 600; letter-spacing: 0.13em; font-size: 14px; }
+  .card-title.hand { font-family: "Caveat", cursive; font-weight: 600; font-size: 26px; letter-spacing: 0.02em; }
+  .rule { border-top: 1px dashed #b9b2a4; margin: 14px 0; }
+  .row { display: flex; justify-content: space-between; font-size: 14px; padding: 4px 0; gap: 12px; }
+  .row .k { color: #8a7c64; }
+  .row .v { text-align: right; }
+  .row .ok { color: #4e7247; }
+  .card-foot { text-align: center; color: #8a7c64; font-size: 11px; letter-spacing: 0.1em; margin-top: 12px; }
+  .stamp {
+    display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 600; letter-spacing: 0.16em;
+    text-transform: uppercase; color: #4e7247; border: 2px double #4e7247; border-radius: 2px; padding: 2px 8px; transform: rotate(-5deg);
+  }
+  .stamp.red { color: #b03a2a; border-color: #b03a2a; }
+</style>
+</head>
+<body>
+  <div id="card" class="card"></div>
+  <div class="pad">
+    <div class="kicker" id="kicker"></div>
+    <div>
+      <h1 id="headline"></h1>
+      <div class="sub" id="sub"></div>
+    </div>
+    <div class="foot" id="foot"></div>
+  </div>
+  <script>
+    // Called by the renderer via page.evaluate, so the same template drives
+    // every card with no web server in the loop (cron-safe).
+    window.renderOG = function (data) {
+      document.getElementById('kicker').textContent = '[ ' + data.kicker + ' ]';
+      document.getElementById('headline').innerHTML = data.h1 + '<br /><span class="amber">' + data.h2 + '</span>';
+      document.getElementById('sub').textContent = data.sub;
+      document.getElementById('foot').innerHTML = data.foot.map(function (f) {
+        return f.b ? '<span><b>' + f.b + '</b> ' + f.t + '</span>' : '<span>' + f.t + '</span>';
+      }).join('');
+      var c = data.card;
+      var html = '<div class="card-title' + (c.hand ? ' hand' : '') + '">' + c.title + '</div><div class="rule"></div>';
+      html += c.rows.map(function (r) {
+        return '<div class="row"><span class="k">' + r.k + '</span><span class="v ' + (r.ok ? 'ok' : '') + '">' + r.v + '</span></div>';
+      }).join('');
+      html += '<div class="rule"></div>';
+      if (c.stamp) html += '<div style="text-align:center"><span class="stamp ' + (c.stampTone || '') + '">' + c.stamp + '</span></div>';
+      else html += '<div class="card-foot">' + (c.foot || '') + '</div>';
+      document.getElementById('card').innerHTML = html;
+    };
+  </script>
+</body>
+</html>
