@@ -67,3 +67,8 @@ echo "== done: $CHANGED repo(s) updated"
 if [ "$CHANGED" -gt 0 ] && command -v agent-notify >/dev/null 2>&1; then
   agent-notify "fleet-sync: $CHANGED site(s) redeploying ($(echo "$NAMES" | xargs))" >/dev/null 2>&1 || true
 fi
+
+# 5. content-aware: draft a specials-board refresh from new release notes.
+# Opens a review PR (never auto-publishes); best-effort, never blocks the sync.
+echo "== content sync"
+node "$KIT/bin/content-sync.mjs" 2>&1 || echo "  content-sync skipped/failed"

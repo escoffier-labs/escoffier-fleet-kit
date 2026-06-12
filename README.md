@@ -15,6 +15,13 @@ sites do not drift and do not need a hand-driven LLM session to update.
 - **Hands-off publishing.** `bin/fleet-sync.sh` fast-forwards each checkout,
   syncs versions, regenerates the cards, and commits and pushes only the repos
   that actually changed. Safe to run on a timer; a no-op run touches nothing.
+- **Content-aware (review-gated).** `bin/content-sync.mjs` detects new
+  releases, drafts a one-line kitchen-voice blurb from each changelog (via
+  `codex exec`), refreshes the "fresh from the kitchen" specials board on
+  escoffierlabs.dev, and opens ONE review PR plus a Discord ping. It never
+  pushes copy to main: an LLM-drafted line always gets a human merge. Idempotent
+  (one draft per release, cached in `.content-state.json`), with a graceful
+  fallback when a changelog is too thin to summarize.
 
 The canonical design system lives in `DESIGN.md` (copied into each site repo).
 
