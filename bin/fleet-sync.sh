@@ -41,6 +41,7 @@ node og/render.mjs >/dev/null
 # 4. commit + push changed repos
 echo "== publish"
 CHANGED=0
+NAMES=""
 for s in $SITES; do
   d="$REPOS/$s"
   [ -d "$d/.git" ] || continue
@@ -49,6 +50,7 @@ for s in $SITES; do
     continue
   fi
   CHANGED=$((CHANGED+1))
+  NAMES="$NAMES ${s%-site}"
   git -C "$d" add -A
   git -C "$d" commit --quiet -m "chore: routine fleet sync (versions + preview cards)"
   branch=$(git -C "$d" rev-parse --abbrev-ref HEAD)
@@ -63,6 +65,5 @@ echo "== done: $CHANGED repo(s) updated"
 
 # Best-effort chat ping. Silent no-op until agent-notify has a channel configured.
 if [ "$CHANGED" -gt 0 ] && command -v agent-notify >/dev/null 2>&1; then
-  printf '{"message":"fleet-sync: %s site(s) updated and redeploying"}' "$CHANGED" \
-    | agent-notify --hook custom >/dev/null 2>&1 || true
+  agent-notify "fleet-sync: $CHANGED site(s) redeploying ($(echo "$NAMES" | xargs))" >/dev/null 2>&1 || true
 fi
