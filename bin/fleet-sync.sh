@@ -60,3 +60,9 @@ for s in $SITES; do
 done
 
 echo "== done: $CHANGED repo(s) updated"
+
+# Best-effort chat ping. Silent no-op until agent-notify has a channel configured.
+if [ "$CHANGED" -gt 0 ] && command -v agent-notify >/dev/null 2>&1; then
+  printf '{"message":"fleet-sync: %s site(s) updated and redeploying"}' "$CHANGED" \
+    | agent-notify --hook custom >/dev/null 2>&1 || true
+fi
