@@ -108,6 +108,26 @@ Ink-stamp colors (used on paper only, never on the ledger):
 - Every animation and hover transform gets a
   `@media (prefers-reduced-motion: reduce)` fallback that freezes it.
 
+## Accessibility (WCAG AA, verified by Lighthouse)
+
+The fleet holds Lighthouse accessibility at 100. Keep it there:
+
+- **Light-theme contrast.** On the cream ground the accent and dim text must
+  clear 4.5:1. Compliant values, already in every `global.css`: light
+  `--accent: #925f2b`, light `--text-dim: #736a5c`, `--receipt-dim: #75694f`.
+  Do not revert to the old `#a8703a` / `#857b6c` / `#8a7c64` (all ~3.7:1).
+- **Headings descend.** Page is one `h1` (hero), then each section opens with
+  an `h2` (the kicker label is the `h2` on skeleton sites: `<h2 class="kicker
+  m-0">`), then cards use `h3`. Never skip a level.
+- **Links are not color-only.** Inline accent-colored text links carry an
+  underline. The global rule `a[style*="color: var(--accent)"]` handles it;
+  accent-background buttons use `color: var(--on-accent)` so they are exempt.
+- **ARIA lists are real lists.** A `role="list"` must contain only
+  `role="listitem"` children; prefer a native `<ul>` with `aria-label` over
+  faking it on a wrapper `<div>`.
+- Decorative artifact text gets `aria-hidden="true"`; every meaningful image
+  or icon-only control has a label.
+
 ## Content rules
 
 - Artifact examples show REAL formats from the product, pinned by tests so
