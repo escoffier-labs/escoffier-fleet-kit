@@ -6,6 +6,7 @@
   "description": "Shared theme, OG preview generator, and routine version sync for the Escoffier Labs site fleet.",
   "scripts": {
     "og": "node og/render.mjs",
+    "publishing:watch": "node bin/publishing-watchdog.mjs",
     "sync": "node bin/sync-versions.mjs",
     "sync:dry": "node bin/sync-versions.mjs --dry",
     "fleet": "bin/fleet-sync.sh"
