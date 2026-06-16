@@ -1,0 +1,22 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: shellcheck shell scripts
+        run: shellcheck bin/*.sh
+
+      - name: node --check each mjs
+        run: |
+          for f in bin/*.mjs og/*.mjs; do
+            echo "checking $f"
+            node --check "$f"
+          done

@@ -9,11 +9,11 @@
 #   5. prints a one-line-per-repo summary (so an OpenClaw cron can relay it)
 #
 # Safe to run repeatedly: a no-op run touches nothing and pushes nothing.
-set -uo pipefail
+set -euo pipefail
 
 KIT="$(cd "$(dirname "$0")/.." && pwd)"
 REPOS="$(cd "$KIT/.." && pwd)"
-cd "$KIT"
+cd "$KIT" || { echo "KIT dir missing" >&2; exit 1; }
 
 SITES=$(node -e "const c=require('./sites.config.json');console.log(Object.keys(c).filter(k=>!k.startsWith('_')).join(' '))")
 
@@ -51,8 +51,10 @@ for s in $SITES; do
   fi
   CHANGED=$((CHANGED+1))
   NAMES="$NAMES ${s%-site}"
-  git -C "$d" add -A
-  git -C "$d" commit --quiet -m "chore: routine fleet sync (versions + preview cards)"
+  if ! git -C "$d" add -A || ! git -C "$d" commit --quiet -m "chore: routine fleet sync (versions + preview cards)"; then
+    echo "  $s: COMMIT FAILED"
+    continue
+  fi
   branch=$(git -C "$d" rev-parse --abbrev-ref HEAD)
   if git -C "$d" push --quiet origin "$branch" 2>/dev/null; then
     echo "  $s: PUSHED ($branch)"
