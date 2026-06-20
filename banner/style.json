@@ -8,6 +8,7 @@
   },
   "styleLanguage": "Loose hand-painted watercolor: wet-on-wet washes, soft feathered edges, plenty of bare cream paper, slate-navy ink linework. One clear focal subject doing one legible task. The texture comes from soft edge bleed in open washes, never from packing small repeating shapes.",
   "exclusionClause": "Flat open background of bare cream paper. No honeycomb, no hexagonal or tiled pattern, no repeating cells, no mosaic or mesh, no brickwork, no mechanical panels, no dense dotted grid, no barnacle or lichen speckle, no constellation of small glowing dots. Not an over-rendered digital painting. Not a dark cluttered diorama.",
+  "contentSafety": "Any text or labels must be obvious placeholders only: no real or realistic personal names, dates of birth, emails, or phone numbers; no real hostnames, secrets, tokens, or API keys; no private IP addresses (if an IP is needed use only 192.0.2.x example addresses). Keep all label text generic and clearly illustrative.",
   "anchors": ["jellyfin", "usage-tracker", "tokenjuice"],
   "anchorDir": "anchors-v1"
 }

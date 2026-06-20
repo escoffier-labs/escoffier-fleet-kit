@@ -21,7 +21,9 @@ export function buildPrompt(slug, briefs = defaultBriefs, style = defaultStyle) 
     : 'Warm amber accent only; keep it nearly monochrome cream and ink.';
   const composition = `Composition: subject ${style.frame.subjectCoverage}; at least ${style.frame.negativeSpaceMin} bare paper; aspect ${style.frame.aspect}.`;
   const kicker = `Small monospaced amber caps top-left reading "[ ${b.category} ]", with clear space around it.`;
-  return [subject, style.styleLanguage, accent, composition, kicker, style.exclusionClause].join(' ');
+  const parts = [subject, style.styleLanguage, accent, composition, kicker, style.exclusionClause];
+  if (style.contentSafety) parts.push(style.contentSafety);
+  return parts.join(' ');
 }
 
 export function provenance(slug, briefs = defaultBriefs, style = defaultStyle) {
@@ -37,7 +39,13 @@ export function provenance(slug, briefs = defaultBriefs, style = defaultStyle) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const arg = process.argv[2];
-  if (!arg) { console.error('usage: node banner/build-prompt.mjs <slug>|--all'); process.exit(1); }
+  if (arg === '--print') {
+    const slug = process.argv[3];
+    if (!slug) { console.error('usage: node banner/build-prompt.mjs --print <slug>'); process.exit(1); }
+    process.stdout.write(buildPrompt(slug));
+    process.exit(0);
+  }
+  if (!arg) { console.error('usage: node banner/build-prompt.mjs <slug>|--all|--print <slug>'); process.exit(1); }
   const slugs = arg === '--all' ? Object.keys(defaultBriefs) : [arg];
   for (const slug of slugs) {
     const sidecar = join(reposRoot, defaultBriefs[slug].target) + '.prompt.txt';

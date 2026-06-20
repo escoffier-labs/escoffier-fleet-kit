@@ -2,3 +2,4 @@ node_modules/
 *.log
 .claude/
 .content-state.json
+banner/_proofs/
