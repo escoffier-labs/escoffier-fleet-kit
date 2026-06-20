@@ -40,3 +40,10 @@ test('unknown anchor throws', () => {
   const briefs = { x: { category: 'X', character: 'crab', action: 'a', accentCool: null, anchor: 'bogus', target: 't' } };
   assert.throws(() => buildPrompt('x', briefs, style), /unknown anchor/);
 });
+
+test('content-safety clause is appended only when present', () => {
+  const briefs = { x: { category: 'X', character: 'a crab', action: 'working', accentCool: null, anchor: 'jellyfin', target: 't' } };
+  assert.doesNotMatch(buildPrompt('x', briefs, style), /undefined/);
+  const withCs = { ...style, contentSafety: 'CS-CLAUSE.' };
+  assert.match(buildPrompt('x', briefs, withCs), /CS-CLAUSE\.$/);
+});

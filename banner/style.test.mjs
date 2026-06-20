@@ -21,3 +21,10 @@ test('exclusion clause bans the whole hex family', () => {
 test('anchors are exactly the three frozen clean sources', () => {
   assert.deepEqual([...style.anchors].sort(), ['jellyfin', 'tokenjuice', 'usage-tracker']);
 });
+
+test('content-safety clause forbids PII and private IPs', () => {
+  const c = style.contentSafety.toLowerCase();
+  for (const term of ['placeholder', 'personal', 'private ip', '192.0.2']) {
+    assert.ok(c.includes(term), `content safety missing: ${term}`);
+  }
+});
