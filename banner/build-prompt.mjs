@@ -14,7 +14,8 @@ export function buildPrompt(slug, briefs = defaultBriefs, style = defaultStyle) 
   const b = briefs[slug];
   if (!b) throw new Error(`No brief for slug: ${slug}`);
   if (!style.anchors.includes(b.anchor)) throw new Error(`Brief ${slug} uses unknown anchor: ${b.anchor}`);
-  const subject = b.character ? `A ${b.character} ${b.action}.` : `A loose watercolor flatlay: ${b.action}.`;
+  const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  const subject = b.character ? `${cap(b.character)} ${b.action}.` : `A loose watercolor flatlay: ${b.action}.`;
   const accent = b.accentCool
     ? `Warm amber accent plus a single cool ${b.accentCool} accent; no third hue.`
     : 'Warm amber accent only; keep it nearly monochrome cream and ink.';

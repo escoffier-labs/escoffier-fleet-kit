@@ -9,15 +9,20 @@ const style = {
 };
 
 test('prompt always carries the exclusion clause', () => {
-  const briefs = { x: { category: 'X · Y', character: 'lobster', action: 'reading', accentCool: 'teal', anchor: 'jellyfin', target: 't' } };
+  const briefs = { x: { category: 'X · Y', character: 'a lobster', action: 'reading', accentCool: 'teal', anchor: 'jellyfin', target: 't' } };
   const p = buildPrompt('x', briefs, style);
   assert.match(p, /No honeycomb/);
   assert.match(p, /hexagonal or tiled pattern/);
 });
 
-test('a character brief produces a subject sentence', () => {
-  const briefs = { x: { category: 'X', character: 'lobster chef', action: 'checking jars', accentCool: null, anchor: 'jellyfin', target: 't' } };
+test('a character brief capitalizes its own article into the subject', () => {
+  const briefs = { x: { category: 'X', character: 'a lobster chef', action: 'checking jars', accentCool: null, anchor: 'jellyfin', target: 't' } };
   assert.match(buildPrompt('x', briefs, style), /A lobster chef checking jars\./);
+});
+
+test('a vowel-article character keeps correct grammar', () => {
+  const briefs = { x: { category: 'X', character: 'an inspector crab', action: 'stamping a doc', accentCool: null, anchor: 'jellyfin', target: 't' } };
+  assert.match(buildPrompt('x', briefs, style), /An inspector crab stamping a doc\./);
 });
 
 test('a flatlay brief (character null) uses flatlay phrasing', () => {
