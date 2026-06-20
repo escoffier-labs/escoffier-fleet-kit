@@ -1,0 +1,13 @@
+{
+  "palette": { "ink": "#0d1014", "amber": "#e0a45c", "cream": "#f5f2ea", "slateNavy": "#1d2733" },
+  "frame": {
+    "aspect": "21:9 (about 2048x877)",
+    "kickerGrammar": "[ NN · PROJECT · CATEGORY ]",
+    "subjectCoverage": "40-55% of the frame, off-center",
+    "negativeSpaceMin": "30%"
+  },
+  "styleLanguage": "Loose hand-painted watercolor: wet-on-wet washes, soft feathered edges, plenty of bare cream paper, slate-navy ink linework. One clear focal subject doing one legible task. The texture comes from soft edge bleed in open washes, never from packing small repeating shapes.",
+  "exclusionClause": "Flat open background of bare cream paper. No honeycomb, no hexagonal or tiled pattern, no repeating cells, no mosaic or mesh, no brickwork, no mechanical panels, no dense dotted grid, no barnacle or lichen speckle, no constellation of small glowing dots. Not an over-rendered digital painting. Not a dark cluttered diorama.",
+  "anchors": ["jellyfin", "usage-tracker", "tokenjuice"],
+  "anchorDir": "anchors-v1"
+}
