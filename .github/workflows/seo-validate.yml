@@ -1,0 +1,82 @@
+# Fleet SEO gate. Builds an Astro site and validates the emitted dist/ against the
+# contract in escoffier-fleet-kit/seo/README.md using bin/seo-validate.mjs (zero npm deps).
+#
+# HOW EACH SITE USES THIS
+# -----------------------
+# The validator script (bin/seo-validate.mjs) is part of escoffier-fleet-kit and, like
+# seo.ts / Seo.astro / og/render.mjs, gets COPIED into each site by bin/fleet-sync.sh
+# (it lands at the site's bin/seo-validate.mjs). Each site then has two equivalent ways
+# to run the gate:
+#
+#   1. Copy this workflow into the site as .github/workflows/seo-validate.yml and let it
+#      run `node bin/seo-validate.mjs ./dist` against the site's own copy of the script
+#      (the default the standalone `push` job below uses).
+#
+#   2. Call this workflow reusably from the site's own CI:
+#         jobs:
+#           seo:
+#             uses: escoffier-labs/escoffier-fleet-kit/.github/workflows/seo-validate.yml@main
+#      and have it run `node ../escoffier-fleet-kit/bin/seo-validate.mjs ./dist` when the
+#      kit is checked out alongside the site (set `validator-path` accordingly).
+#
+# The `push` trigger here exercises the kit's own copy; `workflow_call` lets sites reuse it.
+
+name: seo-validate
+
+on:
+  push:
+    branches: [main]
+  workflow_call:
+    inputs:
+      working-directory:
+        description: Site directory that contains package.json + the Astro build.
+        required: false
+        type: string
+        default: .
+      dist-dir:
+        description: Build output directory to validate.
+        required: false
+        type: string
+        default: ./dist
+      validator-path:
+        description: >-
+          Path to seo-validate.mjs. Default is the site's own copied-in bin/seo-validate.mjs.
+          To call the kit's copy when checked out alongside the site, set this to
+          ../escoffier-fleet-kit/bin/seo-validate.mjs.
+        required: false
+        type: string
+        default: bin/seo-validate.mjs
+      origin:
+        description: >-
+          Optional production origin override (https://host). When empty the validator
+          reads it from the built robots.txt / sitemap.xml or the canonical tags.
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  seo:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory || '.' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ inputs.working-directory || '.' }}/package-lock.json
+
+      - name: npm ci
+        run: npm ci
+
+      - name: npm run build
+        run: npm run build
+
+      - name: validate SEO
+        run: |
+          node "${{ inputs.validator-path || 'bin/seo-validate.mjs' }}" \
+            "${{ inputs.dist-dir || './dist' }}" \
+            ${{ inputs.origin && format('--origin {0}', inputs.origin) || '' }}
