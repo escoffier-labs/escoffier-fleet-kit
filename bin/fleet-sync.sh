@@ -38,6 +38,21 @@ node bin/sync-versions.mjs | tee /tmp/fleet-sync-versions.json
 echo "== og render"
 node og/render.mjs >/dev/null
 
+# 3b. sync the shared SEO head into every site that has adopted it.
+# Seo.astro + seo.ts are host-agnostic (they read Astro.site at build time), so it is
+# safe to overwrite. Only touch sites that already carry src/components/Seo.astro, i.e.
+# sites that opted in during rollout; never force the files onto a site that has not.
+echo "== seo sync"
+for s in $SITES; do
+  d="$REPOS/$s"
+  [ -d "$d/.git" ] || continue
+  if [ -f "$d/src/components/Seo.astro" ]; then
+    cp "$KIT/seo/Seo.astro" "$d/src/components/Seo.astro"
+    cp "$KIT/seo/seo.ts" "$d/src/lib/seo.ts"
+    echo "  $s: seo head synced"
+  fi
+done
+
 # 4. commit + push changed repos
 echo "== publish"
 CHANGED=0
