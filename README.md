@@ -4,6 +4,11 @@ Shared theme and routine maintenance for the Escoffier Labs website fleet. One
 place to keep every `*-site` looking the same and staying current, so the
 sites do not drift and do not need a hand-driven LLM session to update.
 
+<p align="center">
+  <img src="docs/og-card-sample.png" alt="A link-preview card rendered by the kit in the shared dark-ledger kitchen style" width="640">
+</p>
+<p align="center"><em>One template, every site. This is content-guard's card, rendered by <code>og/render.mjs</code> from <code>og/template.html</code> + <code>og/sites.json</code>.</em></p>
+
 ## What it does
 
 - **One OG preview theme.** Every site's link-preview card is rendered from a
