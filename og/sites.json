@@ -578,5 +578,54 @@
       ],
       "foot": "TWELVE COURSES, ONE KITCHEN"
     }
+  },
+  "escoffier-fleet-kit-site": {
+    "kicker": "FLEET KIT · ÉCONOME",
+    "h1": "One theme,",
+    "h2": "every site.",
+    "sub": "Shared OG cards, version sync, and hands-off publishing for the Escoffier Labs site fleet. A fleet that never drifts.",
+    "foot": [
+      {
+        "b": "14",
+        "t": "SITES"
+      },
+      {
+        "b": "1",
+        "t": "TEMPLATE"
+      },
+      {
+        "t": "NO DRIFT"
+      },
+      {
+        "t": "MIT"
+      }
+    ],
+    "card": {
+      "title": "·· FLEET SYNC ··",
+      "rows": [
+        {
+          "k": "versions",
+          "v": "synced",
+          "ok": true
+        },
+        {
+          "k": "og cards",
+          "v": "rendered",
+          "ok": true
+        },
+        {
+          "k": "seo heads",
+          "v": "in sync",
+          "ok": true
+        },
+        {
+          "k": "drift",
+          "v": "none",
+          "ok": true
+        }
+      ],
+      "stamp": "shipped",
+      "stampTone": "green"
+    }
   }
 }
