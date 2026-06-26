@@ -1,4 +1,18 @@
-# escoffier-fleet-kit
+<p align="center">
+  <img src="docs/assets/escoffier-fleet-kit-social-preview.jpg" alt="escoffier-fleet-kit banner" width="900">
+</p>
+
+<h1 align="center">escoffier-fleet-kit</h1>
+
+<p align="center">
+  <strong>Shared theme and routine maintenance for the Escoffier Labs website fleet. One template, every site, always current.</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/actions/workflow/status/escoffier-labs/escoffier-fleet-kit/ci.yml?branch=main&style=for-the-badge&label=ci" alt="CI status">
+  <img src="https://img.shields.io/badge/node-ESM-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node ESM">
+  <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="MIT license">
+</p>
 
 Shared theme and routine maintenance for the Escoffier Labs website fleet. One
 place to keep every `*-site` looking the same and staying current, so the
