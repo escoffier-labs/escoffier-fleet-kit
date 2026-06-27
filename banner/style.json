@@ -2,6 +2,7 @@
   "palette": { "ink": "#0d1014", "amber": "#e0a45c", "cream": "#f5f2ea", "slateNavy": "#1d2733" },
   "frame": {
     "aspect": "21:9 (about 2048x877)",
+    "renderNote": "gpt-image-2 renders at 2048x1152 (16:9) and letterboxes the 21:9 painting with flat cream bands top and bottom. Always normalize the render through crop-bands.py, which strips the bands and outputs the canonical 2048x878 (21:9) banner. Never ship the raw 2048x1152 render.",
     "kickerGrammar": "[ NN · PROJECT · CATEGORY ]",
     "subjectCoverage": "40-55% of the frame, off-center",
     "negativeSpaceMin": "30%"

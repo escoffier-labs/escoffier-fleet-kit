@@ -41,7 +41,12 @@ each generation. The fix is the frozen anchor set plus the exclusion clause.
 3. Gate at 280px: reject any repeating cell texture, muddy digital paint, or an
    unidentifiable subject. On reject, regenerate from the anchor, never from the
    bad output.
-4. Replace the repo's banner and commit it there.
+4. Normalize the render: GPT Image 2 outputs 2048x1152 (16:9) and letterboxes
+   the 21:9 painting with flat cream bands top and bottom. Run
+   `python3 banner/crop-bands.py <out-dir> <render.jpg>` to strip the bands and
+   emit the canonical 2048x878 (21:9) banner. Never ship the raw 16:9 render.
+   (`banner/analyze_bands.py <img>` reports the detected bands without writing.)
+5. Replace the repo's banner and commit it there.
 
 See `banner/ROLLOUT.md` for the current queue and `banner/anchors-v1/README.md`
 for the immutability rule.
