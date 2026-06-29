@@ -1,0 +1,39 @@
+---
+// Shared "More from Escoffier Labs" cross-link section for the fleet.
+//
+// SOURCE OF TRUTH: escoffier-fleet-kit/fleet/FleetLinks.astro
+// Copied into each *-site repo as src/components/FleetLinks.astro by bin/fleet-sync.sh.
+// Pairs with fleet/fleet.ts (the registry). Do NOT edit the copy inside a site repo.
+//
+// Drop <FleetLinks current="<site-key>" /> near the end of a site's homepage (before the
+// footer). It lists every other fleet tool plus a link to the hub, so each tool funnels
+// discovery to its siblings and the flagship. Uses the fleet design tokens (kicker,
+// font-display, --hairline, --bg-panel, --text-muted, --accent) shared across all sites.
+import { FLEET, FLEET_HUB, type FleetTool } from '../lib/fleet.ts';
+
+interface Props {
+  /** Site key from fleet.ts (e.g. 'memory-doctor-site') to exclude from the list. */
+  current?: string;
+}
+const { current = '' } = Astro.props as Props;
+const others: FleetTool[] = FLEET.filter((t) => t.key !== current);
+const hubHost = FLEET_HUB.url.replace(/^https?:\/\//, '');
+---
+<section class="px-6 md:px-10 py-16 border-t" style="border-color: var(--hairline);" aria-label="More from Escoffier Labs">
+  <p class="kicker text-center">[ MORE FROM ESCOFFIER LABS ]</p>
+  <h2 class="font-display text-3xl md:text-4xl mt-2 text-center">Local-first tools for AI coding agents</h2>
+  <p class="text-base mt-3 max-w-2xl mx-auto text-center" style="color: var(--text-muted);">
+    One kitchen, one brigade. Each tool does one job well, and they share one reviewed source of memory, config, and receipts.
+  </p>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 max-w-5xl mx-auto">
+    {others.map((t) => (
+      <a href={t.url} class="rounded-md p-5 border block transition-colors" style="border-color: var(--hairline); background: var(--bg-panel);">
+        <span class="font-display text-lg" style="color: var(--accent);">{t.name}</span>
+        <span class="block text-sm mt-1 leading-relaxed" style="color: var(--text-muted);">{t.blurb}</span>
+      </a>
+    ))}
+  </div>
+  <p class="text-center text-sm mt-8">
+    <a href={FLEET_HUB.url} style="color: var(--accent);">See the whole fleet at {hubHost} &rarr;</a>
+  </p>
+</section>

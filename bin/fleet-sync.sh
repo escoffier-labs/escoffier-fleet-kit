@@ -53,6 +53,22 @@ for s in $SITES; do
   fi
 done
 
+# 3c. sync the shared fleet cross-link section into every site that has adopted it.
+# fleet.ts (the registry) + FleetLinks.astro (the "More from Escoffier Labs" section) are
+# host-agnostic, so it is safe to overwrite. Only touch sites that already carry
+# src/components/FleetLinks.astro, i.e. sites wired during the cross-link rollout; never
+# force the files onto a site that has not opted in.
+echo "== fleet sync"
+for s in $SITES; do
+  d="$REPOS/$s"
+  [ -d "$d/.git" ] || continue
+  if [ -f "$d/src/components/FleetLinks.astro" ]; then
+    cp "$KIT/fleet/FleetLinks.astro" "$d/src/components/FleetLinks.astro"
+    cp "$KIT/fleet/fleet.ts" "$d/src/lib/fleet.ts"
+    echo "  $s: fleet links synced"
+  fi
+done
+
 # 4. commit + push changed repos
 echo "== publish"
 CHANGED=0
