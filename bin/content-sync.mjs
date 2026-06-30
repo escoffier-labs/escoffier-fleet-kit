@@ -4,7 +4,7 @@
 //
 // Safety: opens (or updates) ONE pull request on a stable branch. By default a
 // human merges it; scheduled runners can set ESCOFFIER_CONTENT_SYNC_AUTO_MERGE=1
-// to ask GitHub to auto-merge after checks pass. Idempotent: the LLM runs once
+// to wait for checks and merge after they pass. Idempotent: the LLM runs once
 // per release (blurbs cached in .content-state.json), so a quiet week makes no PR.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -127,7 +127,7 @@ g('push', '-f', 'origin', BRANCH);
 
 const body = `Auto-drafted from the latest release changelogs. Review the wording and merge to publish.\n\n` +
   top.map((r) => `- **${r.name}** ${r.tag}: ${r.blurb}`).join('\n') +
-  `\n\n${AUTO_MERGE ? 'Auto-merge is enabled for this scheduled run; checks must pass before deployment.' : 'Merging deploys escoffierlabs.dev. Edit the lines here if any read wrong.'}`;
+  `\n\n${AUTO_MERGE ? 'Scheduled auto-merge is enabled for this run; checks must pass before deployment.' : 'Merging deploys escoffierlabs.dev. Edit the lines here if any read wrong.'}`;
 let prUrl = '';
 let prUpdated = false;
 let readyToCache = false;
@@ -147,9 +147,10 @@ try {
     console.log('content-sync: opened PR', prUrl);
   }
   if (AUTO_MERGE) {
-    sh('gh', ['pr', 'merge', prUrl, '--repo', 'solomonneas/escoffier-site', '--squash', '--auto', '--delete-branch']);
+    sh('gh', ['pr', 'checks', prUrl, '--repo', 'solomonneas/escoffier-site', '--watch'], { timeout: 900000 });
+    sh('gh', ['pr', 'merge', prUrl, '--repo', 'solomonneas/escoffier-site', '--squash', '--delete-branch']);
     readyToCache = true;
-    console.log('content-sync: auto-merge queued', prUrl);
+    console.log('content-sync: merged after checks', prUrl);
   } else {
     readyToCache = prUpdated;
   }
