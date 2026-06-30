@@ -17,8 +17,9 @@ test('content sync refreshes an existing review PR body', () => {
   assert.match(script, /pr', 'edit'/);
 });
 
-test('content sync can queue auto-merge after PR update', () => {
+test('content sync can merge after PR checks in scheduled mode', () => {
   assert.match(script, /ESCOFFIER_CONTENT_SYNC_AUTO_MERGE/);
+  assert.match(script, /pr', 'checks'/);
   assert.match(script, /pr', 'merge'/);
-  assert.match(script, /--auto/);
+  assert.doesNotMatch(script, /--auto/);
 });
