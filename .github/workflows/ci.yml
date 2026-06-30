@@ -24,9 +24,12 @@ jobs:
       - name: shellcheck shell scripts
         run: shellcheck bin/*.sh
 
+      - name: node tests
+        run: npm test
+
       - name: node --check each mjs
         run: |
-          for f in bin/*.mjs og/*.mjs; do
+          for f in bin/*.mjs og/*.mjs banner/*.mjs; do
             echo "checking $f"
             node --check "$f"
           done

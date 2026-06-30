@@ -16,36 +16,67 @@ REPOS="$(cd "$KIT/.." && pwd)"
 cd "$KIT" || { echo "KIT dir missing" >&2; exit 1; }
 
 SITES=$(node -e "const c=require('./sites.config.json');console.log(Object.keys(c).filter(k=>!k.startsWith('_')).join(' '))")
+ACTIVE_SITES=()
+SKIPPED_SITES=()
 
 echo "== fleet-sync $(date -u +%Y-%m-%dT%H:%MZ)"
 
 # 1. refresh checkouts (only if clean, never clobber local work)
 for s in $SITES; do
   d="$REPOS/$s"
-  [ -d "$d/.git" ] || { echo "  $s: MISSING"; continue; }
-  if [ -n "$(git -C "$d" status --porcelain)" ]; then
-    echo "  $s: dirty, skipping pull"
-  else
-    git -C "$d" pull --ff-only --quiet origin main 2>/dev/null || git -C "$d" pull --ff-only --quiet origin master 2>/dev/null || true
+  if [ ! -d "$d/.git" ]; then
+    if git clone --quiet "https://github.com/solomonneas/$s.git" "$d" 2>/dev/null; then
+      echo "  $s: cloned"
+    else
+      echo "  $s: MISSING"
+      SKIPPED_SITES+=("$s")
+      continue
+    fi
   fi
+  if [ -n "$(git -C "$d" status --porcelain)" ]; then
+    echo "  $s: dirty, skipping"
+    SKIPPED_SITES+=("$s")
+    continue
+  fi
+  if ! git -C "$d" fetch --quiet origin main 2>/dev/null; then
+    echo "  $s: fetch main failed, skipping"
+    SKIPPED_SITES+=("$s")
+    continue
+  fi
+  if ! git -C "$d" checkout main --quiet 2>/dev/null; then
+    echo "  $s: checkout main failed, skipping"
+    SKIPPED_SITES+=("$s")
+    continue
+  fi
+  if ! git -C "$d" pull --ff-only --quiet origin main 2>/dev/null; then
+    echo "  $s: pull main failed, skipping"
+    SKIPPED_SITES+=("$s")
+    continue
+  fi
+  ACTIVE_SITES+=("$s")
 done
 
 # 2. version sync (writes SITE.version in place)
 echo "== version sync"
-node bin/sync-versions.mjs | tee /tmp/fleet-sync-versions.json
+if [ "${#ACTIVE_SITES[@]}" -gt 0 ]; then
+  ESCOFFIER_FLEET_SITES="${ACTIVE_SITES[*]}" node bin/sync-versions.mjs | tee /tmp/fleet-sync-versions.json
+else
+  echo "  no clean active sites"
+fi
 
 # 3. regenerate all OG cards from the shared template
 echo "== og render"
-node og/render.mjs >/dev/null
+for s in "${ACTIVE_SITES[@]}"; do
+  node og/render.mjs "$s" >/dev/null
+done
 
 # 3b. sync the shared SEO head into every site that has adopted it.
 # Seo.astro + seo.ts are host-agnostic (they read Astro.site at build time), so it is
 # safe to overwrite. Only touch sites that already carry src/components/Seo.astro, i.e.
 # sites that opted in during rollout; never force the files onto a site that has not.
 echo "== seo sync"
-for s in $SITES; do
+for s in "${ACTIVE_SITES[@]}"; do
   d="$REPOS/$s"
-  [ -d "$d/.git" ] || continue
   if [ -f "$d/src/components/Seo.astro" ]; then
     cp "$KIT/seo/Seo.astro" "$d/src/components/Seo.astro"
     cp "$KIT/seo/seo.ts" "$d/src/lib/seo.ts"
@@ -59,9 +90,8 @@ done
 # src/components/FleetLinks.astro, i.e. sites wired during the cross-link rollout; never
 # force the files onto a site that has not opted in.
 echo "== fleet sync"
-for s in $SITES; do
+for s in "${ACTIVE_SITES[@]}"; do
   d="$REPOS/$s"
-  [ -d "$d/.git" ] || continue
   if [ -f "$d/src/components/FleetLinks.astro" ]; then
     cp "$KIT/fleet/FleetLinks.astro" "$d/src/components/FleetLinks.astro"
     cp "$KIT/fleet/fleet.ts" "$d/src/lib/fleet.ts"
@@ -73,9 +103,8 @@ done
 echo "== publish"
 CHANGED=0
 NAMES=""
-for s in $SITES; do
+for s in "${ACTIVE_SITES[@]}"; do
   d="$REPOS/$s"
-  [ -d "$d/.git" ] || continue
   if [ -z "$(git -C "$d" status --porcelain)" ]; then
     echo "  $s: no change"
     continue
@@ -86,15 +115,17 @@ for s in $SITES; do
     echo "  $s: COMMIT FAILED"
     continue
   fi
-  branch=$(git -C "$d" rev-parse --abbrev-ref HEAD)
-  if git -C "$d" push --quiet origin "$branch" 2>/dev/null; then
-    echo "  $s: PUSHED ($branch)"
+  if git -C "$d" push --quiet origin main 2>/dev/null; then
+    echo "  $s: PUSHED (main)"
   else
     echo "  $s: committed, PUSH FAILED"
   fi
 done
 
 echo "== done: $CHANGED repo(s) updated"
+if [ "${#SKIPPED_SITES[@]}" -gt 0 ]; then
+  echo "== skipped: ${SKIPPED_SITES[*]}"
+fi
 
 # Best-effort chat ping. Silent no-op until agent-notify has a channel configured.
 if [ "$CHANGED" -gt 0 ] && command -v agent-notify >/dev/null 2>&1; then
