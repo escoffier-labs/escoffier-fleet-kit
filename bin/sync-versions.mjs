@@ -12,6 +12,12 @@ const kit = join(here, '..');
 const repos = join(kit, '..');
 const dry = process.argv.includes('--dry');
 const config = JSON.parse(readFileSync(join(kit, 'sites.config.json'), 'utf-8'));
+const selectedSites = new Set(
+  (process.env.ESCOFFIER_FLEET_SITES || '')
+    .split(/\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean),
+);
 
 function ghLatestTag(repo) {
   try {
@@ -54,6 +60,7 @@ function desiredVersion(cfg, current) {
 const summary = [];
 for (const [slug, cfg] of Object.entries(config)) {
   if (slug.startsWith('_')) continue;
+  if (selectedSites.size > 0 && !selectedSites.has(slug)) continue;
   const siteTs = join(repos, slug, 'src', 'lib', 'site.ts');
   if (!existsSync(siteTs)) {
     summary.push({ slug, status: 'no-site-ts' });

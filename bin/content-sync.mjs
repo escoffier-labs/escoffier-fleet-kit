@@ -90,7 +90,6 @@ for (const r of top) {
     llmCalls++;
   }
 }
-writeFileSync(STATE, JSON.stringify(state, null, 2) + '\n');
 
 // Build the new SPECIALS array literal.
 const specials = top.map((r) => `  { name: '${r.name}', note: '${r.tag} · ${r.blurb.replace(/'/g, "\\'")}' },`).join('\n');
@@ -119,6 +118,7 @@ try {
   g('commit', '-m', 'content: refresh the specials board from latest releases');
 } catch {
   console.log('content-sync: nothing to commit.');
+  g('checkout', 'main');
   process.exit(0);
 }
 g('push', '-f', 'origin', BRANCH);
@@ -127,16 +127,20 @@ const body = `Auto-drafted from the latest release changelogs. Review the wordin
   top.map((r) => `- **${r.name}** ${r.tag}: ${r.blurb}`).join('\n') +
   `\n\nMerging deploys escoffierlabs.dev. Edit the lines here if any read wrong.`;
 let prUrl = '';
+let prUpdated = false;
 try {
   const existing = sh('gh', ['pr', 'list', '--repo', 'solomonneas/escoffier-site',
     '--head', BRANCH, '--state', 'open', '--json', 'url', '-q', '.[0].url']).trim();
   if (existing) {
     prUrl = existing;
+    sh('gh', ['pr', 'edit', prUrl, '--repo', 'solomonneas/escoffier-site', '--body', body]);
+    prUpdated = true;
     console.log('content-sync: updated existing PR', prUrl);
   } else {
     prUrl = sh('gh', ['pr', 'create', '--repo', 'solomonneas/escoffier-site',
       '--head', BRANCH, '--base', 'main',
       '--title', 'content: refresh specials board', '--body', body]).trim();
+    prUpdated = true;
     console.log('content-sync: opened PR', prUrl);
   }
 } catch (e) {
@@ -151,4 +155,7 @@ try {
 } catch {}
 
 g('checkout', 'main');
+if (prUpdated) {
+  writeFileSync(STATE, JSON.stringify(state, null, 2) + '\n');
+}
 console.log(`content-sync: done, ${llmCalls} new blurb(s).`);
