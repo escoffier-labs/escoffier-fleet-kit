@@ -2,10 +2,10 @@
 // kitchen-voice blurb from its actual changelog and refresh the
 // "fresh from the kitchen" specials board on escoffierlabs.dev.
 //
-// Safety: never pushes to main. It opens (or updates) ONE pull request on a
-// stable branch and pings #fleet-deploys, so an LLM-drafted line always gets a
-// human merge before it goes live. Idempotent: the LLM runs once per release
-// (blurbs cached in .content-state.json), so a quiet week makes no PR.
+// Safety: opens (or updates) ONE pull request on a stable branch. By default a
+// human merges it; scheduled runners can set ESCOFFIER_CONTENT_SYNC_AUTO_MERGE=1
+// to ask GitHub to auto-merge after checks pass. Idempotent: the LLM runs once
+// per release (blurbs cached in .content-state.json), so a quiet week makes no PR.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -18,6 +18,7 @@ const SITE = join(repos, 'escoffier-site');
 const INDEX = join(SITE, 'src', 'pages', 'index.astro');
 const STATE = join(kit, '.content-state.json');
 const BRANCH = 'content/specials-refresh';
+const AUTO_MERGE = process.env.ESCOFFIER_CONTENT_SYNC_AUTO_MERGE === '1';
 
 const config = JSON.parse(readFileSync(join(kit, 'sites.config.json'), 'utf-8'));
 const state = existsSync(STATE) ? JSON.parse(readFileSync(STATE, 'utf-8')) : {};
@@ -102,7 +103,8 @@ if (next === src) {
   process.exit(0);
 }
 
-// Open or update a single review PR. Never touch main directly.
+// Open or update a single review PR. In auto-merge mode, GitHub still gates it
+// on the repository's configured checks before it reaches main.
 const g = (...a) => sh('git', ['-C', SITE, ...a]);
 if (g('status', '--porcelain').trim()) {
   console.log('content-sync: escoffier-site working tree dirty, skipping to avoid clobber.');
@@ -125,9 +127,10 @@ g('push', '-f', 'origin', BRANCH);
 
 const body = `Auto-drafted from the latest release changelogs. Review the wording and merge to publish.\n\n` +
   top.map((r) => `- **${r.name}** ${r.tag}: ${r.blurb}`).join('\n') +
-  `\n\nMerging deploys escoffierlabs.dev. Edit the lines here if any read wrong.`;
+  `\n\n${AUTO_MERGE ? 'Auto-merge is enabled for this scheduled run; checks must pass before deployment.' : 'Merging deploys escoffierlabs.dev. Edit the lines here if any read wrong.'}`;
 let prUrl = '';
 let prUpdated = false;
+let readyToCache = false;
 try {
   const existing = sh('gh', ['pr', 'list', '--repo', 'solomonneas/escoffier-site',
     '--head', BRANCH, '--state', 'open', '--json', 'url', '-q', '.[0].url']).trim();
@@ -143,6 +146,13 @@ try {
     prUpdated = true;
     console.log('content-sync: opened PR', prUrl);
   }
+  if (AUTO_MERGE) {
+    sh('gh', ['pr', 'merge', prUrl, '--repo', 'solomonneas/escoffier-site', '--squash', '--auto', '--delete-branch']);
+    readyToCache = true;
+    console.log('content-sync: auto-merge queued', prUrl);
+  } else {
+    readyToCache = prUpdated;
+  }
 } catch (e) {
   console.log('content-sync: PR step failed:', String(e).slice(0, 200));
 }
@@ -155,7 +165,7 @@ try {
 } catch {}
 
 g('checkout', 'main');
-if (prUpdated) {
+if (readyToCache) {
   writeFileSync(STATE, JSON.stringify(state, null, 2) + '\n');
 }
 console.log(`content-sync: done, ${llmCalls} new blurb(s).`);
