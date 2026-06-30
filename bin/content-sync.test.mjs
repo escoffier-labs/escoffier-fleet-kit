@@ -16,3 +16,9 @@ test('content sync persists release state only after updating the PR branch', ()
 test('content sync refreshes an existing review PR body', () => {
   assert.match(script, /pr', 'edit'/);
 });
+
+test('content sync can queue auto-merge after PR update', () => {
+  assert.match(script, /ESCOFFIER_CONTENT_SYNC_AUTO_MERGE/);
+  assert.match(script, /pr', 'merge'/);
+  assert.match(script, /--auto/);
+});
