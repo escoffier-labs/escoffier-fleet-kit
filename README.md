@@ -9,9 +9,9 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/actions/workflow/status/escoffier-labs/escoffier-fleet-kit/ci.yml?branch=main&style=for-the-badge&label=ci" alt="CI status">
-  <img src="https://img.shields.io/badge/node-ESM-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node ESM">
-  <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="MIT license">
+  <img src="https://shieldcn.dev/github/ci/escoffier-labs/escoffier-fleet-kit.svg?branch=main&workflow=ci.yml" alt="CI status">
+  <img src="https://shieldcn.dev/badge/node-ESM-339933.svg?logo=node.js&logoColor=white" alt="Node ESM">
+  <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
 Shared theme and routine maintenance for the Escoffier Labs website fleet. One
