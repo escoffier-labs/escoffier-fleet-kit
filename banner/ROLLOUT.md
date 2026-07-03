@@ -23,4 +23,11 @@ repo, commit there.
 - [x] prompt-library (slight declutter; keep the card-catalog lobster)
 
 ## Keep (no work)
-jellyfin-mcp, usage-tracker, all og-cards, wazuh-mcp, misp-mcp.
+jellyfin-mcp, all og-cards, wazuh-mcp, misp-mcp.
+
+## Spine round (2026-07-02): old -banner.jpg art regenerated
+- [x] usage-tracker (L'ADDITION; unfrozen from the Keep list, anchors-v1 copy untouched)
+- [x] code-search-api (L'OFFICE)
+- [x] solos-cookbook (LE GRAND LIVRE)
+- [x] cutsheet (LA DECOUPE; first banner, repo had none)
+- [x] token-glace brief renamed from tokenjuice after the GitHub repo rename; shipped banner unchanged
