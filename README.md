@@ -47,11 +47,14 @@ sites do not drift and do not need a hand-driven LLM session to update.
   fallback when a changelog is too thin to summarize.
 
 The canonical design system lives in `DESIGN.md` (copied into each site repo).
+The fleet README contract, section order, proof conventions, badges, lives in
+`README-SPINE.md`.
 
 ## Layout
 
 ```
 DESIGN.md            canonical aesthetic reference for every fleet site
+README-SPINE.md      the fleet README contract: section order, proof, badges
 sites.config.json    per-site version source (gh-release | skill-count | manual)
 og/
   template.html      the one OG card template (dark ledger + cream artifact)
