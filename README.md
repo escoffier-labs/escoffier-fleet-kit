@@ -46,6 +46,13 @@ sites do not drift and do not need a hand-driven LLM session to update.
   (one draft per release, cached in `.content-state.json`), with a graceful
   fallback when a changelog is too thin to summarize.
 
+- **Reusable React islands (opt-in).** `fleet/islands/` holds the glue that
+  makes Justin Levine's jal-co/ui components drop into a fleet Astro site,
+  themed to the ledger palette: a shadcn token bridge, build-time GitHub
+  fetchers, a static badge composition, and a shieldcn chart wrapper.
+  `bin/adopt-islands.sh <site>` copies it in; `docs/ISLANDS.md` is the recipe.
+  Proven on brigade.tools/blog (commit-graph timeline + release/CI badges).
+
 The canonical design system lives in `DESIGN.md` (copied into each site repo).
 The fleet README contract, section order, proof conventions, badges, lives in
 `README-SPINE.md`.
@@ -60,9 +67,20 @@ og/
   template.html      the one OG card template (dark ledger + cream artifact)
   sites.json         per-site OG copy (kicker, headline, subtitle, footer, card)
   render.mjs         renders cards to each repo's public/og-card.png (2x, no server)
+fleet/
+  FleetLinks.astro   shared cross-link section, synced into every site
+  fleet.ts           the site registry FleetLinks reads
+  islands/           jal-co/ui island glue (opt-in per site, see docs/ISLANDS.md)
+    shadcn-alias.css   shadcn -> ledger token bridge (islands theme for free)
+    github-data.ts     build-time GitHub fetchers (commits, release, CI)
+    JalcoProjectBadgesStatic.tsx  static release + CI badges
+    ShieldcnChart.astro           dark/light shieldcn chart wrapper
+docs/
+  ISLANDS.md         recipe: add jal-co/ui React islands to a fleet Astro site
 bin/
   sync-versions.mjs  read tool versions, patch SITE.version in each site repo
   fleet-sync.sh      the headless routine: pull, sync, render, commit, push
+  adopt-islands.sh   copy the island glue into a site, then follow ISLANDS.md
   publishing-watchdog.mjs  ClawHub/Printing Press publishing status report
 publishing/
   manifest.json      public skill and CLI publishing inventory
