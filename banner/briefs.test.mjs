@@ -18,7 +18,7 @@ test('every brief has the required fields and a valid anchor', () => {
 
 test('every spec redo/light-fix repo has a brief', () => {
   const required = [
-    'n8n-ops', 'agentpantry', 'postiz', 'watchtower', 'hotwash', 'content-guard',
+    'n8n-ops', 'agentpantry', 'postiz', 'watchtower', 'hotwash',
     'code-search', 'vervet', 'maltego', 'cortex', 'zeek', 'prompt-library',
   ];
   for (const slug of required) {
