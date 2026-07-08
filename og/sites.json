@@ -1,6 +1,6 @@
 {
   "brigade-site": {
-    "kicker": "BRIGADE · OPERATOR LAYER",
+    "kicker": "BRIGADE \u00b7 OPERATOR LAYER",
     "h1": "Your agents run loops.",
     "h2": "Brigade keeps the receipts.",
     "sub": "The local operator layer for eighteen agent harnesses.",
@@ -21,7 +21,7 @@
       }
     ],
     "card": {
-      "title": "·· BRIGADE RECEIPT ··",
+      "title": "\u00b7\u00b7 BRIGADE RECEIPT \u00b7\u00b7",
       "rows": [
         {
           "k": "RUN",
@@ -50,7 +50,7 @@
     }
   },
   "agentpantry-site": {
-    "kicker": "AGENT PANTRY · GARDE-MANGER",
+    "kicker": "AGENT PANTRY \u00b7 GARDE-MANGER",
     "h1": "Authenticated sessions",
     "h2": "for agent machines.",
     "sub": "Mirror the browser auth and secrets you choose to the machine your agent runs on, sealed end to end.",
@@ -70,7 +70,7 @@
       }
     ],
     "card": {
-      "title": "·· PANTRY STATUS ··",
+      "title": "\u00b7\u00b7 PANTRY STATUS \u00b7\u00b7",
       "rows": [
         {
           "k": "ROLE",
@@ -95,56 +95,8 @@
       "foot": "REPLAY COUNTER STRICT"
     }
   },
-  "content-guard-site": {
-    "kicker": "CONTENT GUARD · LE PASSE",
-    "h1": "Nothing leaves",
-    "h2": "the kitchen unchecked.",
-    "sub": "Policy-driven content scanning and publish gates. Hostnames, private IPs, and keys caught at the boundary.",
-    "foot": [
-      {
-        "b": "3",
-        "t": "POLICIES"
-      },
-      {
-        "b": "0",
-        "t": "DAEMONS"
-      },
-      {
-        "t": "100% LOCAL"
-      },
-      {
-        "t": "MIT"
-      }
-    ],
-    "card": {
-      "title": "·· THE PASS ··",
-      "rows": [
-        {
-          "k": "policy",
-          "v": "public-repo"
-        },
-        {
-          "k": "hostnames",
-          "v": "clear",
-          "ok": true
-        },
-        {
-          "k": "private IPs",
-          "v": "clear",
-          "ok": true
-        },
-        {
-          "k": "key patterns",
-          "v": "clear",
-          "ok": true
-        }
-      ],
-      "stamp": "checked",
-      "stampTone": "green"
-    }
-  },
   "stationtrail-site": {
-    "kicker": "STATIONTRAIL · CHEF DE PARTIE",
+    "kicker": "STATIONTRAIL \u00b7 CHEF DE PARTIE",
     "h1": "Every station",
     "h2": "keeps its log.",
     "sub": "Export local agent-session history from every harness to portable JSONL. Local only, no network calls.",
@@ -184,7 +136,7 @@
     }
   },
   "sourceharvest-site": {
-    "kicker": "SOURCEHARVEST · LE MARCHE",
+    "kicker": "SOURCEHARVEST \u00b7 LE MARCHE",
     "h1": "What comes in",
     "h2": "from beyond the kitchen.",
     "sub": "Export notes, chat archives, issues, and git history into one portable adapter format.",
@@ -204,7 +156,7 @@
       }
     ],
     "card": {
-      "title": "·· MARKET CRATES ··",
+      "title": "\u00b7\u00b7 MARKET CRATES \u00b7\u00b7",
       "rows": [
         {
           "k": "notes",
@@ -231,7 +183,7 @@
     }
   },
   "miseledger-site": {
-    "kicker": "MISELEDGER · LE GRAND LIVRE",
+    "kicker": "MISELEDGER \u00b7 LE GRAND LIVRE",
     "h1": "The bound ledger",
     "h2": "for agent work.",
     "sub": "A local-first evidence graph over agent history. SQLite full-text search, Markdown export, evidence bundles.",
@@ -271,7 +223,7 @@
     }
   },
   "memory-doctor-site": {
-    "kicker": "MEMORY DOCTOR · TOURNANT",
+    "kicker": "MEMORY DOCTOR \u00b7 TOURNANT",
     "h1": "The daily line check",
     "h2": "for agent memory.",
     "sub": "Maintenance CLI for the Claude Code and OpenClaw memory system. Four verbs: status, lint, ingest, compact.",
@@ -292,7 +244,7 @@
       }
     ],
     "card": {
-      "title": "line check · memory",
+      "title": "line check \u00b7 memory",
       "hand": true,
       "rows": [
         {
@@ -317,7 +269,7 @@
     }
   },
   "bootstrap-doctor-site": {
-    "kicker": "BOOTSTRAP DOCTOR · COMMIS",
+    "kicker": "BOOTSTRAP DOCTOR \u00b7 COMMIS",
     "h1": "Keep the mise",
     "h2": "en place tight.",
     "sub": "Audit oversize OpenClaw bootstrap files and trim them into reference cards with heuristics plus judgment.",
@@ -337,7 +289,7 @@
       }
     ],
     "card": {
-      "title": "·· TRIMMING BOARD ··",
+      "title": "\u00b7\u00b7 TRIMMING BOARD \u00b7\u00b7",
       "rows": [
         {
           "k": "MEMORY.md",
@@ -362,7 +314,7 @@
     }
   },
   "agent-notify-site": {
-    "kicker": "AGENT NOTIFY · ABOYEUR",
+    "kicker": "AGENT NOTIFY \u00b7 ABOYEUR",
     "h1": "Calls the orders",
     "h2": "to your channels.",
     "sub": "Privacy-first push notifications from coding agents to Discord, Telegram, and Signal. Zero telemetry.",
@@ -383,7 +335,7 @@
       }
     ],
     "card": {
-      "title": "·· ON THE SPIKE ··",
+      "title": "\u00b7\u00b7 ON THE SPIKE \u00b7\u00b7",
       "rows": [
         {
           "k": "build green",
@@ -404,7 +356,7 @@
     }
   },
   "cloche-site": {
-    "kicker": "CLOCHE · CHEF DE RANG",
+    "kicker": "CLOCHE \u00b7 CHEF DE RANG",
     "h1": "Lift the dome,",
     "h2": "the shot is plated.",
     "sub": "Agent-neutral desktop capture for people and agents. Polished shots, stable JSON, optional MCP server.",
@@ -423,7 +375,7 @@
       }
     ],
     "card": {
-      "title": "·· PLATED ··",
+      "title": "\u00b7\u00b7 PLATED \u00b7\u00b7",
       "rows": [
         {
           "k": "captured",
@@ -448,7 +400,7 @@
     }
   },
   "mise-en-scene-site": {
-    "kicker": "MISE EN SCENE · L'ARDOISE",
+    "kicker": "MISE EN SCENE \u00b7 L'ARDOISE",
     "h1": "Your system,",
     "h2": "explained on the board.",
     "sub": "Turn repos, specs, and incident reports into interactive HTML/SVG explainers with audience modes.",
@@ -487,7 +439,7 @@
     }
   },
   "skillet-site": {
-    "kicker": "SKILLET · LA TECHNIQUE",
+    "kicker": "SKILLET \u00b7 LA TECHNIQUE",
     "h1": "A skillet full",
     "h2": "of agent skills.",
     "sub": "Production-tested workflows for auditing, improving, and shipping repos with AI coding agents.",
@@ -507,7 +459,7 @@
       }
     ],
     "card": {
-      "title": "·· THE PASS ··",
+      "title": "\u00b7\u00b7 THE PASS \u00b7\u00b7",
       "rows": [
         {
           "k": "/line-check",
@@ -531,7 +483,7 @@
     }
   },
   "escoffier-site": {
-    "kicker": "ESCOFFIER LABS · AGENT OPS",
+    "kicker": "ESCOFFIER LABS \u00b7 AGENT OPS",
     "h1": "Mise en place",
     "h2": "for your agents.",
     "sub": "Small, composable agent-ops tools that run like a kitchen. Local by default, receipts for everything.",
@@ -580,7 +532,7 @@
     }
   },
   "escoffier-fleet-kit-site": {
-    "kicker": "FLEET KIT · ÉCONOME",
+    "kicker": "FLEET KIT \u00b7 \u00c9CONOME",
     "h1": "One theme,",
     "h2": "every site.",
     "sub": "Shared OG cards, version sync, and hands-off publishing for the Escoffier Labs site fleet. A fleet that never drifts.",
@@ -601,7 +553,7 @@
       }
     ],
     "card": {
-      "title": "·· FLEET SYNC ··",
+      "title": "\u00b7\u00b7 FLEET SYNC \u00b7\u00b7",
       "rows": [
         {
           "k": "versions",

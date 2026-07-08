@@ -28,7 +28,7 @@ function sh(cmd, args, opts = {}) {
 
 // Display names for the board (matches the la carte names).
 const NAMES = {
-  brigade: 'Brigade', agentpantry: 'Agent Pantry', 'content-guard': 'Content Guard',
+  brigade: 'Brigade', agentpantry: 'Agent Pantry',
   stationtrail: 'StationTrail', sourceharvest: 'SourceHarvest', miseledger: 'MiseLedger',
   'memory-doctor': 'Memory Doctor', 'bootstrap-doctor': 'Bootstrap Doctor',
   'agent-notify': 'Agent Notify', cloche: 'Cloche', 'mise-en-scene': 'Mise en Scene',
