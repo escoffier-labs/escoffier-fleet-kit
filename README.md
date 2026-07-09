@@ -5,50 +5,49 @@
 <h1 align="center">escoffier-fleet-kit</h1>
 
 <p align="center">
-  <strong>Shared theme and routine maintenance for the Escoffier Labs website fleet. One template, every site, always current.</strong>
+  <img src="docs/assets/marks/escoffier-fleet-kit-circle.svg" alt="" width="40" height="40">
+</p>
+
+<p align="center">
+  <strong>One theme for every Escoffier site. Keep the fleet from drifting.</strong>
+</p>
+
+<p align="center">
+  Shared OG card template, version sync from GitHub releases, and hands-off publishing for the *-site fleet. Change the kitchen style once; regenerate all.
+</p>
+
+<p align="center">
+  <a href="#install">Install</a> &middot; <a href="#what-it-does">What it does</a>
 </p>
 
 <p align="center">
   <img src="https://shieldcn.dev/github/ci/escoffier-labs/escoffier-fleet-kit.svg?branch=main&workflow=ci.yml" alt="CI status">
-  <img src="https://shieldcn.dev/badge/node-ESM-339933.svg?logo=node.js&logoColor=white" alt="Node ESM">
   <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
-Shared theme and routine maintenance for the Escoffier Labs website fleet. One
-place to keep every `*-site` looking the same and staying current, so the
-sites do not drift and do not need a hand-driven LLM session to update.
+## Install
 
-<p align="center">
-  <img src="docs/og-card-sample.png" alt="A link-preview card rendered by the kit in the shared dark-ledger kitchen style" width="640">
-</p>
-<p align="center"><em>One template, every site. This is content-guard's card, rendered by <code>og/render.mjs</code> from <code>og/template.html</code> + <code>og/sites.json</code>.</em></p>
+```bash
+git clone https://github.com/escoffier-labs/escoffier-fleet-kit.git
+cd escoffier-fleet-kit
+npm install
+# render OG cards / sync versions — see bin/ and package.json scripts
+```
 
 ## What it does
 
-- **One OG preview theme.** Every site's link-preview card is rendered from a
-  single template (`og/template.html`) and a content map (`og/sites.json`), in
-  the shared dark-ledger kitchen style. Change the theme once, regenerate all.
-- **Version sync.** Reads each tool's latest GitHub release (or skill count)
-  and writes it into that site's `SITE.version`, so the sites never lag the
-  tools they market.
-- **Hands-off publishing.** `bin/fleet-sync.sh` fast-forwards each checkout,
-  syncs versions, regenerates the cards, and commits and pushes only the repos
-  that actually changed. Safe to run on a timer; a no-op run touches nothing.
-- **Tool publishing watchdog.** `bin/publishing-watchdog.mjs` reads
-  `publishing/manifest.json`, checks local source state, pulls live ClawHub
-  stats for published skills, and prints a Discord-ready report with a JSON
-  receipt.
-- **Content-aware (review-gated).** `bin/content-sync.mjs` detects new
-  releases, drafts a one-line kitchen-voice blurb from each changelog (via
-  `codex exec`), refreshes the "fresh from the kitchen" specials board on
-  escoffierlabs.dev, and opens ONE review PR plus a Discord ping. It never
-  pushes copy to main: an LLM-drafted line always gets a human merge. Idempotent
-  (one draft per release, cached in `.content-state.json`), with a graceful
-  fallback when a changelog is too thin to summarize.
+| | Job | What you get |
+|---|---|---|
+| **Theme** | One OG template | Dark-ledger kitchen style for every product card |
+| **Sync** | Versions from releases | SITE.version stays current without hand edits |
+| **Publish** | Fleet script | Fast-forward, regenerate, commit only what changed |
 
-The canonical design system lives in `DESIGN.md` (copied into each site repo).
-The fleet README contract, section order, proof conventions, badges, lives in
-`README-SPINE.md`.
+<p align="center">
+  <img src="docs/og-card-sample.png" alt="Sample OG card" width="760">
+</p>
+
+<p align="center"><em>One template, every site.</em></p>
+
 
 ## Layout
 
@@ -60,9 +59,20 @@ og/
   template.html      the one OG card template (dark ledger + cream artifact)
   sites.json         per-site OG copy (kicker, headline, subtitle, footer, card)
   render.mjs         renders cards to each repo's public/og-card.png (2x, no server)
+fleet/
+  FleetLinks.astro   shared cross-link section, synced into every site
+  fleet.ts           the site registry FleetLinks reads
+  islands/           jal-co/ui island glue (opt-in per site, see docs/ISLANDS.md)
+    shadcn-alias.css   shadcn -> ledger token bridge (islands theme for free)
+    github-data.ts     build-time GitHub fetchers (commits, release, CI)
+    JalcoProjectBadgesStatic.tsx  static release + CI badges
+    ShieldcnChart.astro           dark/light shieldcn chart wrapper
+docs/
+  ISLANDS.md         recipe: add jal-co/ui React islands to a fleet Astro site
 bin/
   sync-versions.mjs  read tool versions, patch SITE.version in each site repo
   fleet-sync.sh      the headless routine: pull, sync, render, commit, push
+  adopt-islands.sh   copy the island glue into a site, then follow ISLANDS.md
   publishing-watchdog.mjs  ClawHub/Printing Press publishing status report
 publishing/
   manifest.json      public skill and CLI publishing inventory
