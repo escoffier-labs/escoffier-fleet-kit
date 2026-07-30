@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Shared theme, OG preview generator, and routine version sync for the Escoffier Labs site fleet.",
   "scripts": {
+    "test": "node --test bin/*.test.mjs",
     "og": "node og/render.mjs",
     "publishing:watch": "node bin/publishing-watchdog.mjs",
     "sync": "node bin/sync-versions.mjs",
