@@ -92,6 +92,19 @@ PUSHED=0
 PUSHED_NAMES=""
 FAILED_NAMES=""
 
+# Print the configured push remote and merge ref for a local branch.
+upstream_target() {
+  local d="$1" branch="$2" remote merge
+  remote=$(git -C "$d" config --get "branch.${branch}.remote" 2>/dev/null) || return 1
+  merge=$(git -C "$d" config --get "branch.${branch}.merge" 2>/dev/null) || return 1
+  [ -n "$remote" ] && [ "$remote" != "." ] || return 1
+  case "$merge" in
+    refs/heads/*) ;;
+    *) return 1 ;;
+  esac
+  printf '%s\t%s\n' "$remote" "$merge"
+}
+
 # How many commits is HEAD ahead of its configured tracked upstream (@{u})?
 # Returns non-zero if @{u} cannot be resolved or publication state cannot be
 # determined; never falls back to origin/<branch> and never lies with 0.
@@ -164,8 +177,15 @@ for s in $SITES; do
   fi
 
   if [ "$need_push" -eq 1 ]; then
-    if git -C "$d" push --quiet origin "$branch" 2>/dev/null; then
-      echo "  $s: PUSHED ($branch)"
+    if ! target=$(upstream_target "$d" "$branch"); then
+      echo "  $s: PUSH FAILED (no configured upstream)"
+      FAILED_NAMES="$FAILED_NAMES $s"
+      continue
+    fi
+    remote="${target%%$'\t'*}"
+    merge="${target#*$'\t'}"
+    if git -C "$d" push --quiet "$remote" "HEAD:$merge" 2>/dev/null; then
+      echo "  $s: PUSHED ($remote/${merge#refs/heads/})"
       PUSHED=$((PUSHED+1))
       PUSHED_NAMES="$PUSHED_NAMES ${s%-site}"
     else

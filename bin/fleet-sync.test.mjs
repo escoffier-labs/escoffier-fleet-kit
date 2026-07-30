@@ -59,6 +59,9 @@ function fixture(mode) {
   );
   writeFileSync(trace, '');
   if (mode === 'dirty') writeFileSync(join(site, 'local.txt'), 'unfinished work\n');
+  if (mode === 'deploy-tracks-main' || mode === 'team-prod') {
+    writeFileSync(join(site, '.unpublished'), '1\n');
+  }
 
   // Control flags for multi-run scenarios (paths for bash).
   const siteBash = bashPath(site);
@@ -149,6 +152,8 @@ case "$command" in
       if [ "$arg" = "HEAD" ]; then
         if [ "$MODE" = detached ]; then
           echo HEAD
+        elif [ "$MODE" = deploy-tracks-main ]; then
+          echo deploy
         else
           echo main
         fi
@@ -158,6 +163,10 @@ case "$command" in
         if [ "$MODE" = ahead-fail ]; then
           echo 'fatal: no upstream configured' >&2
           exit 128
+        fi
+        if [ "$MODE" = team-prod ]; then
+          echo 'team/prod/main'
+          exit 0
         fi
         if [ -f "$repo/.unpublished" ] || [ "$MODE" = push-retry ] || [ "$MODE" = push-fail ]; then
           echo 'origin/main'
@@ -178,11 +187,38 @@ case "$command" in
     echo main
     exit 0
     ;;
+  config)
+    key="\${5:-}"
+    if [ "$MODE" = team-prod ]; then
+      case "$key" in
+        branch.main.remote) echo 'team/prod' ;;
+        branch.main.merge) echo 'refs/heads/main' ;;
+        *) exit 1 ;;
+      esac
+      exit 0
+    fi
+    case "$key" in
+      branch.main.remote|branch.deploy.remote) echo 'origin' ;;
+      branch.main.merge|branch.deploy.merge) echo 'refs/heads/main' ;;
+      *) exit 1 ;;
+    esac
+    exit 0
+    ;;
   rev-list)
     # git -C repo rev-list --count <range>
     if [ "$MODE" = rev-list-fail ]; then
       echo 'fatal: bad revision' >&2
       exit 128
+    fi
+    if [ "$MODE" = deploy-tracks-main ]; then
+      if [ -f "$repo/.main-advanced" ]; then
+        echo 0
+      elif [ -f "$repo/.unpublished" ]; then
+        echo 1
+      else
+        echo 0
+      fi
+      exit 0
     fi
     if [ -f "$repo/.unpublished" ]; then
       echo 1
@@ -204,6 +240,13 @@ case "$command" in
   push)
     if [ -f "${controlBash}/block-push" ]; then
       exit 1
+    fi
+    if [ "$MODE" = deploy-tracks-main ]; then
+      if printf '%s' "$*" | grep -qE ':refs/heads/main([[:space:]]|$)'; then
+        touch "$repo/.main-advanced"
+        rm -f "$repo/.unpublished"
+      fi
+      exit 0
     fi
     rm -f "$repo/.unpublished"
     exit 0
@@ -389,6 +432,24 @@ test('rev-list failure is not treated as ahead=0 success', () => {
   }
 });
 
+test('slash-bearing remote name is preserved when pushing the configured upstream', () => {
+  const f = fixture('team-prod');
+  try {
+    const result = f.run();
+    assert.equal(result.status, 0, `stdout=${result.stdout}\nstderr=${result.stderr}`);
+    assert.match(result.stdout, /PUSHED \(team\/prod\/main\)/);
+
+    const trace = f.trace();
+    assert.match(trace, /git -C [^\n]+ config --get branch\.main\.remote/);
+    assert.match(trace, /git -C [^\n]+ config --get branch\.main\.merge/);
+    assert.match(trace, /git -C [^\n]+ push --quiet team\/prod HEAD:refs\/heads\/main/);
+    assert.doesNotMatch(trace, /push --quiet (origin|team|prod) /);
+    assert.ok(!existsSync(join(f.site, '.unpublished')), 'configured upstream advanced');
+  } finally {
+    rmSync(f.root, { recursive: true, force: true });
+  }
+});
+
 test('detached HEAD is rejected before generation or commit', () => {
   const f = fixture('detached');
   try {
@@ -449,6 +510,25 @@ test('failed push leaves unpublished commits; later run retries push and never r
     assert.match(third.stdout, /PUSHED|pushed/i);
     assert.ok(!existsSync(join(f.site, '.unpublished')), 'unpublished marker cleared after push');
     assert.match(f.trace(), /notify /);
+  } finally {
+    rmSync(f.root, { recursive: true, force: true });
+  }
+});
+
+test('local deploy branch tracking origin/main publishes to the configured upstream ref', () => {
+  const f = fixture('deploy-tracks-main');
+  try {
+    const result = f.run();
+    assert.equal(result.status, 0, `stdout=${result.stdout}\nstderr=${result.stderr}`);
+    assert.match(result.stdout, /PUSHED \(origin\/main\)/);
+    assert.doesNotMatch(result.stdout, /PUSHED \(deploy\)/);
+
+    const trace = f.trace();
+    assert.match(trace, /git -C [^\n]+ push --quiet origin HEAD:refs\/heads\/main/);
+    assert.doesNotMatch(trace, /push --quiet origin deploy\b/);
+    assert.ok(!existsSync(join(f.site, '.unpublished')), 'configured upstream advanced');
+    assert.ok(existsSync(join(f.site, '.main-advanced')), 'origin/main advanced');
+    assert.match(trace, /notify /);
   } finally {
     rmSync(f.root, { recursive: true, force: true });
   }
