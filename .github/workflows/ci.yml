@@ -17,6 +17,9 @@ jobs:
       - name: node tests
         run: npm test
 
+      - name: banner geometry tests
+        run: python3 -m unittest discover -s banner -p "*_test.py"
+
       - name: node --check each mjs
         run: |
           for f in bin/*.mjs og/*.mjs banner/*.mjs; do

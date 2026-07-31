@@ -46,6 +46,10 @@ each generation. The fix is the frozen anchor set plus the exclusion clause.
    `python3 banner/crop-bands.py <out-dir> <render.jpg>` to strip the bands and
    emit the canonical 2048x878 (21:9) banner. Never ship the raw 16:9 render.
    (`banner/analyze_bands.py <img>` reports the detected bands without writing.)
+   Some renders come back at ~1915x821, already 21:9; crop-bands.py takes those
+   whole rather than stripping a band that isn't there. Every crop is anchored
+   top-left so the kicker survives, so check the shipped banner reads
+   `[ NAME . STATION ]` with both brackets.
 5. Replace the repo's banner and commit it there.
 
 See `banner/ROLLOUT.md` for the current queue and `banner/anchors-v1/README.md`

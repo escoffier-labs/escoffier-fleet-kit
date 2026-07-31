@@ -1,42 +1,54 @@
 #!/usr/bin/env python3
 """Strip flat letterbox bands from fleet banners and normalize to a uniform 21:9 frame.
 
-Per image: detect top/bottom flat bands, crop them, center-crop the remainder to the
-target aspect, resize to exactly TARGET_W x TARGET_H, save JPEG. Originals are read-only;
+Per image: detect top/bottom flat bands, crop to the target aspect anchored at the
+top-left, resize to exactly TARGET_W x TARGET_H, save JPEG. Originals are read-only;
 output goes to a separate path so results can be reviewed before replacing.
+
+The crop is anchored top-left because the amber `[ NAME . STATION ]` kicker lives in
+that corner. A centered crop trims both edges and eats the opening bracket.
 
 Usage: crop-bands.py OUT_DIR IMG [IMG ...]
 """
 import sys, os
-from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from analyze_bands import detect_bands  # noqa: E402
 
 TARGET_W, TARGET_H = 2048, 878          # 21:9-ish, even height
 TARGET_AR = TARGET_W / TARGET_H
+ASPECT_TOL = 0.01                       # relative; within this the frame is already 21:9
+
+def plan_crop(w, h, top, bot, target_ar=TARGET_AR, tol=ASPECT_TOL):
+    """Box (left, upper, right, lower) to take from a raw render. Pure geometry, no PIL.
+
+    gpt-image-2 returns ~1915x821, which is already 21:9 within tolerance, but band
+    detection still reports a thin top band on it. Stripping that band makes the frame
+    too wide, and the width crop that follows would clip the kicker. So: if the raw
+    frame is already at target aspect, take it whole and let the resize do the work.
+    Otherwise strip the detected bands and trim the overhang off the right or bottom
+    only, never off the left or top.
+    """
+    if abs(w / h - target_ar) / target_ar <= tol:
+        return (0, 0, w, h)
+    cw, ch = w, h - top - bot
+    ar = cw / ch
+    if ar > target_ar:           # too wide -> trim width off the right
+        cw = round(ch * target_ar)
+    elif ar < target_ar:         # too tall -> trim height off the bottom
+        ch = round(cw / target_ar)
+    return (0, top, cw, top + ch)
 
 def process(path, out_path):
+    from PIL import Image
+    from analyze_bands import detect_bands
     w, h, top, bot, _ch, _band = detect_bands(path)
+    box = plan_crop(w, h, top, bot)
     im = Image.open(path).convert('RGB')
-    # 1. strip detected bands
-    content = im.crop((0, top, w, h - bot))
-    cw, ch = content.size
-    # 2. center-crop the longer axis to hit target aspect exactly
-    ar = cw / ch
-    if ar > TARGET_AR:           # too wide -> trim width
-        new_w = round(ch * TARGET_AR)
-        x0 = (cw - new_w) // 2
-        content = content.crop((x0, 0, x0 + new_w, ch))
-    elif ar < TARGET_AR:         # too tall -> trim height
-        new_h = round(cw / TARGET_AR)
-        y0 = (ch - new_h) // 2
-        content = content.crop((0, y0, cw, y0 + new_h))
-    # 3. normalize to exact dimensions
-    out = content.resize((TARGET_W, TARGET_H), Image.LANCZOS)
+    out = im.crop(box).resize((TARGET_W, TARGET_H), Image.LANCZOS)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     out.save(out_path, 'JPEG', quality=92)
-    print(f'{os.path.basename(path):42s} {w}x{h} -> strip(t{top},b{bot}) -> {TARGET_W}x{TARGET_H}  {out_path}')
+    kept = 'whole frame' if box == (0, 0, w, h) else f'strip(t{top},b{bot}) crop{box}'
+    print(f'{os.path.basename(path):42s} {w}x{h} -> {kept} -> {TARGET_W}x{TARGET_H}  {out_path}')
 
 if __name__ == '__main__':
     out_dir = sys.argv[1]
