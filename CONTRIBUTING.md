@@ -31,4 +31,9 @@ Open an issue before a PR for:
 
 - Keep runs idempotent: a no-op must touch nothing.
 - No tokens, secrets, or machine-specific paths in committed files.
-- Conventional commits, no AI co-authorship trailers.
+- Use conventional commits. Include a co-author trailer for each tool that did
+  substantial work in this repository. Use the tool's verified attribution
+  address.
+- Follow the [GitHub agent attribution policy](AGENTS.md#github-agent-attribution)
+  for issue bodies, pull request bodies, and comments written or edited on
+  Solomon's behalf.
